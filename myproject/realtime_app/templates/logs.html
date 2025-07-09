@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูล Log จาก(Brown University Benchmark) ClickHouse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 p-4 sm:p-6 md:p-8">
+
+    <div class="container mx-auto p-4 bg-white shadow-lg rounded-xl">
+        <h1 class="text-3xl sm:text-4xl font-bold text-center text-indigo-700 mb-8">
+            ข้อมูล Log(Brown University Benchmark) จาก ClickHouse
+        </h1>
+
+        {% if error_message %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mb-6" role="alert">
+                <strong class="font-bold">ข้อผิดพลาด!</strong>
+                <span class="block sm:inline">{{ error_message }}</span>
+            </div>
+        {% endif %}
+
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-semibold text-indigo-600 mb-4 pb-2 border-b-2 border-indigo-200">
+                ตาราง: mgbench.logs1
+            </h2>
+            <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-indigo-50">
+                        <tr>
+                            {% for col in logs1_columns %}
+                                <th scope="col" class="px-4 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                    {{ col }}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for row in logs1 %}
+                            <tr class="hover:bg-gray-50">
+                                {% for item in row %}
+                                    <td class="px-4 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-sm text-gray-600">
+                                        {{ item }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="{{ logs1_columns|length }}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                    ไม่พบข้อมูลในตาราง mgbench.logs1
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-semibold text-indigo-600 mb-4 pb-2 border-b-2 border-indigo-200">
+                ตาราง: mgbench.logs2
+            </h2>
+            <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-indigo-50">
+                        <tr>
+                            {% for col in logs2_columns %}
+                                <th scope="col" class="px-4 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                    {{ col }}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for row in logs2 %}
+                            <tr class="hover:bg-gray-50">
+                                {% for item in row %}
+                                    <td class="px-4 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-sm text-gray-600">
+                                        {{ item }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="{{ logs2_columns|length }}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                    ไม่พบข้อมูลในตาราง mgbench.logs2
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-semibold text-indigo-600 mb-4 pb-2 border-b-2 border-indigo-200">
+                ตาราง: mgbench.logs3
+            </h2>
+            <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-indigo-50">
+                        <tr>
+                            {% for col in logs3_columns %}
+                                <th scope="col" class="px-4 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                    {{ col }}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for row in logs3 %}
+                            <tr class="hover:bg-gray-50">
+                                {% for item in row %}
+                                    <td class="px-4 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-sm text-gray-600">
+                                        {{ item }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="{{ logs3_columns|length }}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                    ไม่พบข้อมูลในตาราง mgbench.logs3
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

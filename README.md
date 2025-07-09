@@ -30,3 +30,5 @@ cd myproject
 จากนั้นทำการรันเพื่อนเปิด server
 
 python manage.py runserver
+
+จากนั้นไปที่ path: http://127.0.0.1:8000/hw04/

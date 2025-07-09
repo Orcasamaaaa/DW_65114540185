@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'daphne',
+    'django_clickhouse',
     'channels',  # Keep 'channels' here, and it handles Daphne
     "django.contrib.admin",
     "django.contrib.auth",
@@ -41,7 +42,15 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'realtime_app',
 ]
-
+CLICKHOUSE_DATABASES = {
+    'default': {
+        'db_name': 'mgbench',
+        'username': 'default',
+        'password': '',
+        'host': '127.0.0.1',
+        'port': 9000,
+    },
+}
 #WSGI_APPLICATION = 'myproject.asgi.application'
 ASGI_APPLICATION = 'myproject.asgi.application'
 
@@ -78,12 +87,16 @@ WSGI_APPLICATION = "myproject.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.dummy',  # ใช้ backend dummy เพื่อรองรับการเชื่อมต่อ
+#         'NAME': 'default',
+#         'USER': 'default',
+#         'PASSWORD': '',
+#         'HOST': '127.0.0.1',
+#         'PORT': '9000',
+#     }
+# }
 
 
 # Password validation

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สร้าง Dashboard ด้วย Superset</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-gray-800 text-white py-6 text-center shadow">
+    <h1 class="text-2xl font-bold">📊 ขั้นตอนการนำเสนอข้อมูลบน Dashboard ด้วย Superset</h1>
+  </header>
+
+  <main class="max-w-4xl mx-auto p-6 space-y-6">
+
+    <!-- บทนำ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <p class="text-gray-700 mb-4">
+        ในส่วนนี้จะแนะนำวิธีสร้าง <strong>Dashboard</strong> ใน Apache Superset
+        โดยจะยกตัวอย่างการสร้างกราฟจากตาราง <code>mgbench.logs1</code> เพื่อดูค่า CPU Usage ตามเวลา
+      </p>
+    </section>
+
+    <!-- ขั้นตอนการสร้าง Dashboard -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">✅ ขั้นตอนที่ 1: เลือก Dataset</h2>
+      <ul class="list-disc pl-6 mb-3">
+        <li>ไปที่เมนู <strong>Data > Datasets</strong></li>
+        <li>เลือก Dataset ของตาราง <code>mgbench.logs1</code></li>
+        <li>กดปุ่ม <strong>[ Explore ]</strong> เพื่อเข้าสู่หน้าการสร้าง Chart</li>
+      </ul>
+    </section>
+
+    <!-- ตัวอย่างกราฟ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">✅ ขั้นตอนที่ 2: สร้างกราฟ CPU Usage (Line Chart)</h2>
+      <p class="mb-3">เราจะสร้างกราฟแสดง <strong>ค่า CPU Idle (%) ตามเวลา</strong> จากตาราง <code>mgbench.logs1</code></p>
+
+      <h3 class="text-lg font-semibold text-blue-500 mb-2">🎨 การตั้งค่าใน Superset</h3>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong>Chart Type:</strong> เลือก <code>Line Chart</code></li>
+        <li><strong>Time Column:</strong> ใช้ <code>log_time</code></li>
+        <li><strong>Metric:</strong> เลือกค่าเฉลี่ยของ <code>cpu_idle</code> (Average)</li>
+        <li><strong>Group By:</strong> เลือก <code>machine_group</code> เพื่อเปรียบเทียบกลุ่มเครื่อง</li>
+        <li>ตั้งค่า <strong>Time Range:</strong> เลือกเป็น <code>Last 7 days</code> หรือกำหนดเอง</li>
+      </ul>
+
+      <h3 class="text-lg font-semibold text-blue-500 mt-4 mb-2">📌 ตัวอย่าง Query ที่ Superset จะสร้าง:</h3>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded overflow-x-auto"><code>SELECT
+    log_time,
+    machine_group,
+    avg(cpu_idle) AS avg_cpu_idle
+FROM mgbench.logs1
+GROUP BY log_time, machine_group
+ORDER BY log_time ASC;</code></pre>
+
+      <p class="mt-3">กราฟที่ได้จะแสดงการเปลี่ยนแปลงของ <strong>CPU Idle</strong> ตามเวลา แยกตามกลุ่มเครื่อง</p>
+    </section>
+
+    <!-- เพิ่ม Chart ใน Dashboard -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">✅ ขั้นตอนที่ 3: บันทึกและเพิ่มลง Dashboard</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>กดปุ่ม <strong>[ Save ]</strong> เพื่อบันทึก Chart</li>
+        <li>เลือก <strong>Add to existing dashboard</strong> หรือสร้าง Dashboard ใหม่</li>
+        <li>ตั้งชื่อ Dashboard เช่น <code>MgBench Monitoring</code></li>
+      </ul>
+    </section>
+
+    <!-- สรุป -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">🎉 สรุป</h2>
+      <p>
+        คุณได้เรียนรู้วิธีการสร้าง Line Chart จากตาราง <code>mgbench.logs1</code>
+        และเพิ่มลงใน Dashboard เพื่อใช้วิเคราะห์ประสิทธิภาพของระบบตามเวลา
+      </p>
+    </section>
+
+    <!-- ปุ่มกลับ -->
+    <div class="text-center mt-6">
+      <a href="index.html" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">⬅ กลับหน้าแรก</a>
+    </div>
+
+  </main>
+
+  <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+    <p>HW05 - ClickHouse + Superset</p>
+  </footer>
+
+</body>
+</html>

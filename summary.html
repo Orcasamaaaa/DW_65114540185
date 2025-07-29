@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>บทสรุป HW05</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-gray-800 text-white py-6 text-center shadow">
+    <h1 class="text-2xl font-bold">📌 บทสรุปการบ้าน HW05: ClickHouse + Superset</h1>
+  </header>
+
+  <main class="max-w-4xl mx-auto p-6 space-y-6">
+
+    <!-- บทสรุป -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">สรุปขั้นตอนการทำงาน</h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>ติดตั้ง <strong>ClickHouse</strong> บน WSL และตั้งค่า Server สำหรับจัดเก็บข้อมูล</li>
+        <li>นำเข้าข้อมูลจาก HW04 โดยใช้ <strong>Brown University Benchmark (MgBench)</strong></li>
+        <li>ติดตั้งและตั้งค่า <strong>Apache Superset</strong> เพื่อใช้สร้าง Dashboard</li>
+        <li>เชื่อมต่อ Superset เข้ากับฐานข้อมูล ClickHouse ผ่าน SQLAlchemy URI</li>
+        <li>สร้าง <strong>Dashboard</strong> แสดงผลข้อมูล เช่น Line Chart และ Bar Chart จากตาราง <code>mgbench.logs1</code></li>
+      </ul>
+    </section>
+
+    <!-- สิ่งที่ได้เรียนรู้ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">สิ่งที่ได้เรียนรู้</h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>วิธีติดตั้งและใช้งาน ClickHouse สำหรับการจัดการข้อมูลขนาดใหญ่</li>
+        <li>การเชื่อมต่อ ClickHouse กับ Django และดึงข้อมูลจากฐานข้อมูล</li>
+        <li>การติดตั้งและตั้งค่า Apache Superset เพื่อสร้าง Dashboard วิเคราะห์ข้อมูล</li>
+        <li>การสร้าง Dataset และ Chart จาก SQL Query จริง</li>
+        <li>การนำข้อมูล Log มาวิเคราะห์ในรูปแบบ Visualization</li>
+      </ul>
+    </section>
+
+    <!-- ผลลัพธ์ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">ผลลัพธ์ของงาน</h2>
+      <p class="mb-2">
+        ผลงานสุดท้ายคือ Dashboard ที่สร้างขึ้นจากข้อมูลใน MgBench ซึ่งสามารถใช้ในการวิเคราะห์ประสิทธิภาพเครื่อง,
+        ตรวจสอบ Log และแสดงผลข้อมูลในรูปแบบที่เข้าใจง่ายผ่านกราฟและ Visualization ต่างๆ
+      </p>
+    </section>
+
+    <!-- ปุ่มกลับ -->
+    <div class="text-center mt-6">
+      <a href="index.html" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">⬅ กลับหน้าแรก</a>
+    </div>
+
+  </main>
+
+  <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+    <p>HW05 - ClickHouse + Superset</p>
+  </footer>
+
+</body>
+</html>

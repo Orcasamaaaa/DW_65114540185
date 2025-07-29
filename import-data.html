@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>นำเข้าข้อมูลจาก HW04</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-gray-800 text-white py-6 text-center shadow">
+    <h1 class="text-2xl font-bold">นำเข้าข้อมูลจาก HW04</h1>
+  </header>
+
+  <main class="max-w-4xl mx-auto p-6 space-y-6">
+
+    <!-- ขั้นตอนการเตรียมระบบ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">ขั้นตอนการเตรียมระบบ</h2>
+      <p class="mb-2">
+        ก่อนจะนำเข้าข้อมูล จำเป็นต้องเตรียมสภาพแวดล้อมและติดตั้งเครื่องมือที่จำเป็น
+      </p>
+      <ul class="list-disc pl-6 space-y-1 mb-3">
+        <li>ติดตั้ง <strong>ClickHouse</strong> และ <strong>Django</strong> ให้พร้อม</li>
+        <li>สร้าง Virtual Environment และติดตั้ง dependencies</li>
+      </ul>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code>cd myproject
+pip install -r requirements.txt</code></pre>
+    </section>
+
+    <!-- บทนำ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <p class="text-gray-700 mb-4">
+        ในส่วนนี้จะเป็นการนำเข้าข้อมูลจาก <strong>HW04</strong> โดยใช้ dataset ของ
+        <strong>Brown University Benchmark (MgBench)</strong> ซึ่งเป็นชุดข้อมูลสำหรับทดสอบการวิเคราะห์ log data
+        ที่สร้างจากเครื่องโดยตรง
+      </p>
+    </section>
+
+    <!-- ดาวน์โหลดข้อมูล -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">1️⃣ ดาวน์โหลดข้อมูล</h2>
+      <p class="mb-2">ใช้คำสั่ง <code>wget</code> เพื่อดาวน์โหลดไฟล์ CSV ที่ถูกบีบอัด:</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code>wget https://datasets.clickhouse.com/mgbench{1..3}.csv.xz</code></pre>
+    </section>
+
+    <!-- แตกไฟล์ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">2️⃣ แตกไฟล์ข้อมูล</h2>
+      <p class="mb-2">ใช้คำสั่ง <code>xz</code> ในการแตกไฟล์ <code>.csv.xz</code>:</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code>xz -v -d mgbench{1..3}.csv.xz</code></pre>
+    </section>
+
+    <!-- สร้างฐานข้อมูล -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">3️⃣ สร้างฐานข้อมูลและตาราง</h2>
+      <p class="mb-2">สร้าง Database และ Table สำหรับเก็บข้อมูล MgBench:</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code>CREATE DATABASE mgbench;
+
+USE mgbench;
+
+CREATE TABLE mgbench.logs1 (
+  log_time      DateTime,
+  machine_name  LowCardinality(String),
+  machine_group LowCardinality(String),
+  cpu_idle      Nullable(Float32),
+  cpu_nice      Nullable(Float32),
+  cpu_system    Nullable(Float32),
+  cpu_user      Nullable(Float32),
+  cpu_wio       Nullable(Float32),
+  disk_free     Nullable(Float32),
+  disk_total    Nullable(Float32),
+  part_max_used Nullable(Float32),
+  load_fifteen  Nullable(Float32),
+  load_five     Nullable(Float32),
+  load_one      Nullable(Float32),
+  mem_buffers   Nullable(Float32),
+  mem_cached    Nullable(Float32),
+  mem_free      Nullable(Float32),
+  mem_shared    Nullable(Float32),
+  swap_free     Nullable(Float32),
+  bytes_in      Nullable(Float32),
+  bytes_out     Nullable(Float32)
+)
+ENGINE = MergeTree()
+ORDER BY (machine_group, machine_name, log_time);</code></pre>
+
+      <pre class="bg-gray-900 text-green-400 p-3 rounded mt-3"><code>CREATE TABLE mgbench.logs2 (
+  log_time    DateTime,
+  client_ip   IPv4,
+  request     String,
+  status_code UInt16,
+  object_size UInt64
+)
+ENGINE = MergeTree()
+ORDER BY log_time;</code></pre>
+
+      <pre class="bg-gray-900 text-green-400 p-3 rounded mt-3"><code>CREATE TABLE mgbench.logs3 (
+  log_time     DateTime64,
+  device_id    FixedString(15),
+  device_name  LowCardinality(String),
+  device_type  LowCardinality(String),
+  device_floor UInt8,
+  event_type   LowCardinality(String),
+  event_unit   FixedString(1),
+  event_value  Nullable(Float32)
+)
+ENGINE = MergeTree()
+ORDER BY (event_type, log_time);</code></pre>
+    </section>
+
+    <!-- การเปิดใช้งาน ClickHouse Server -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-green-600 mb-3">🚀 การเปิดใช้งาน ClickHouse Server</h2>
+      <p class="mb-2">ใช้คำสั่ง:</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code>clickhouse server</code></pre>
+    </section>
+
+    <!-- การเชื่อมต่อกับ Django -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-purple-600 mb-3">🔗 การเชื่อมต่อกับ Django (views.py)</h2>
+      <p class="mb-3">สร้างไฟล์ <code>views.py</code> เพื่อเชื่อมต่อกับ ClickHouse และดึงข้อมูลมาแสดงผลในเทมเพลต:</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded text-sm overflow-x-auto"><code>def logs_view(request):
+    """
+    ดึงข้อมูลจากตาราง ClickHouse ทั้งสามตาราง (mgbench.logs1, mgbench.logs2, mgbench.logs3)
+    และจัดรูปแบบชื่อคอลัมน์ก่อนส่งไปยังเทมเพลต
+    """
+    try:
+        # เชื่อมต่อกับ ClickHouse server
+        client = Client('localhost')
+
+        # ดึงข้อมูลจากตาราง mgbench.logs1 จำนวน 10 แถว
+        query_logs1 = 'SELECT * FROM mgbench.logs1 LIMIT 10'
+        logs1_data = client.execute(query_logs1)
+
+        # ดึงข้อมูลจากตาราง mgbench.logs2 จำนวน 10 แถว
+        query_logs2 = 'SELECT * FROM mgbench.logs2 LIMIT 10'
+        logs2_data = client.execute(query_logs2)
+
+        # ดึงข้อมูลจากตาราง mgbench.logs3 จำนวน 10 แถว
+        query_logs3 = 'SELECT * FROM mgbench.logs3 LIMIT 10'
+        logs3_data = client.execute(query_logs3)
+
+        # กำหนดชื่อคอลัมน์สำหรับแต่ละตาราง
+        logs1_columns_raw = [
+            'log_time', 'machine_name', 'machine_group', 'cpu_idle', 'cpu_nice',
+            'cpu_system', 'cpu_user', 'cpu_wio', 'disk_free', 'disk_total',
+            'part_max_used', 'load_fifteen', 'load_five', 'load_one',
+            'mem_buffers', 'mem_cached', 'mem_free', 'mem_shared', 'swap_free',
+            'bytes_in', 'bytes_out'
+        ]
+        logs2_columns_raw = [
+            'log_time', 'client_ip', 'request', 'status_code', 'object_size'
+        ]
+        logs3_columns_raw = [
+            'log_time', 'device_id', 'device_name', 'device_type', 'device_floor',
+            'event_type', 'event_unit', 'event_value'
+        ]
+
+        logs1_columns = [col.replace("_", " ") for col in logs1_columns_raw]
+        logs2_columns = [col.replace("_", " ") for col in logs2_columns_raw]
+        logs3_columns = [col.replace("_", " ") for col in logs3_columns_raw]
+
+        context = {
+            'logs1': logs1_data,
+            'logs2': logs2_data,
+            'logs3': logs3_data,
+            'logs1_columns': logs1_columns,
+            'logs2_columns': logs2_columns,
+            'logs3_columns': logs3_columns,
+        }
+        return render(request, 'logs.html', context)
+
+    except Exception as e:
+        return render(request, 'logs.html', {'error_message': f'เกิดข้อผิดพลาดในการเชื่อมต่อ ClickHouse หรือดึงข้อมูล: {e}'})</code></pre>
+    </section>
+
+    <!-- การแสดงผลด้วย Django -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-pink-600 mb-3">🌐 การแสดงผลด้วย Django</h2>
+      <p class="mb-2">เริ่มต้น Django Server:</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code>python manage.py runserver</code></pre>
+      <p class="mt-2">เปิดเว็บเบราว์เซอร์ไปที่ <code>http://127.0.0.1:8000/hw04/</code> เพื่อดูข้อมูล</p>
+    </section>
+
+    <!-- ปุ่มกลับ -->
+    <div class="text-center mt-6">
+      <a href="index.html" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">⬅ กลับหน้าแรก</a>
+    </div>
+
+  </main>
+
+  <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+    <p>HW05 - ClickHouse + Superset</p>
+  </footer>
+
+</body>
+</html>

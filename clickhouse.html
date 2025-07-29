@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ติดตั้ง ClickHouse บน WSL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-gray-800 text-white py-6 text-center shadow">
+    <h1 class="text-2xl font-bold">การติดตั้ง ClickHouse บน WSL (Ubuntu)</h1>
+  </header>
+
+  <main class="max-w-4xl mx-auto p-6 space-y-6">
+
+    <section class="bg-white rounded-lg p-6 shadow">
+      <p class="text-gray-700 mb-4">
+        เพื่อให้สามารถจัดการกับข้อมูลขนาดใหญ่ในระบบ Data Warehouse ได้อย่างมีประสิทธิภาพ
+        เราได้เลือกใช้ <strong>ClickHouse</strong> ซึ่งเป็น Column-oriented Database ที่มีความเร็วสูง
+        โดยในที่นี้จะอธิบายวิธีการติดตั้งบนระบบ <strong>WSL (Ubuntu)</strong> อย่างละเอียด
+      </p>
+    </section>
+
+    <!-- ขั้นตอนที่ 1 -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">ขั้นตอนที่ 1: อัปเดตแพ็กเกจในระบบ</h2>
+      <p class="mb-2">เริ่มต้นด้วยการอัปเดตรายการแพ็กเกจและอัปเกรดซอฟต์แวร์ทั้งหมดให้เป็นเวอร์ชันล่าสุด</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code>sudo apt update
+sudo apt upgrade -y</code></pre>
+    </section>
+
+    <!-- ขั้นตอนที่ 2 -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">ขั้นตอนที่ 2: ติดตั้ง ClickHouse</h2>
+      <p class="mb-2">ใช้สคริปต์ทางการจาก ClickHouse เพื่อทำการติดตั้งโดยอัตโนมัติ คำสั่งนี้จะดาวน์โหลดและรันสคริปต์ติดตั้งให้ทันที</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code>curl https://clickhouse.com/ | sh</code></pre>
+    </section>
+
+    <!-- ขั้นตอนที่ 3 -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">ขั้นตอนที่ 3: เริ่มต้นใช้งาน ClickHouse</h2>
+      <p class="mb-2">หลังติดตั้งเสร็จเรียบร้อย สามารถเริ่มเซิร์ฟเวอร์ในพื้นหลัง และเชื่อมต่อผ่าน client ได้ด้วยคำสั่งต่อไปนี้:</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code># เริ่ม server (แนะนำให้รันใน terminal แยก)
+sudo /etc/init.d/clickhouse-server start
+
+# เปิด client เพื่อสั่งงานฐานข้อมูล
+clickhouse-client</code></pre>
+    </section>
+
+    <!-- พอร์ตที่ใช้งาน -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">🌐 พอร์ตที่ใช้งาน</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong>9000</strong> – สำหรับ native client (เช่น clickhouse-client, ไดรเวอร์ต่างๆ)</li>
+        <li><strong>8123</strong> – สำหรับ HTTP interface (ใช้กับ REST API หรือ Web UI)</li>
+      </ul>
+    </section>
+
+    <!-- ไฟล์และโฟลเดอร์ที่สำคัญ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">📁 ไฟล์และโฟลเดอร์ที่สำคัญ</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><code>/etc/clickhouse-server/config.xml</code> – ไฟล์ตั้งค่าหลักของเซิร์ฟเวอร์</li>
+        <li><code>/var/lib/clickhouse/</code> – โฟลเดอร์สำหรับจัดเก็บข้อมูลทั้งหมด</li>
+      </ul>
+    </section>
+
+    <!-- ปุ่มกลับ -->
+    <div class="text-center mt-6">
+      <a href="index.html" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">⬅ กลับหน้าแรก</a>
+    </div>
+
+  </main>
+
+  <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+    <p>HW05 - ClickHouse + Superset</p>
+  </footer>
+
+</body>
+</html>

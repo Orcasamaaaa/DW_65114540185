@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เชื่อมต่อ Superset กับ ClickHouse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-gray-800 text-white py-6 text-center shadow">
+    <h1 class="text-2xl font-bold">🧭 การเชื่อมต่อ ClickHouse กับ Superset</h1>
+  </header>
+
+  <main class="max-w-4xl mx-auto p-6 space-y-6">
+
+    <!-- บทนำ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <p class="text-gray-700 mb-4">
+        คู่มือนี้จะแนะนำการเชื่อมต่อฐานข้อมูล <strong>ClickHouse</strong> ที่รันบน <strong>WSL</strong> เข้ากับ
+        <strong>Apache Superset</strong> เพื่อสร้าง Dataset สำหรับการวิเคราะห์ข้อมูล
+      </p>
+    </section>
+
+    <!-- ตรวจสอบ Services -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">✅ 1. ตรวจสอบว่า Services ทำงานอยู่</h2>
+      <ul class="list-disc pl-6 mb-3">
+        <li>Apache Superset ควรทำงานที่ <code>http://127.0.0.1:8088</code></li>
+        <li>ClickHouse Server ควรตอบสนองที่พอร์ต <strong>8123</strong></li>
+      </ul>
+      <p class="mb-2">ทดสอบ ClickHouse HTTP Port:</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code>curl http://127.0.0.1:8123</code></pre>
+      <p class="mt-2">หากถูกต้อง ควรได้รับข้อความตอบกลับว่า <strong>Ok.</strong></p>
+    </section>
+
+    <!-- เริ่มสร้างการเชื่อมต่อ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">✅ 2. เริ่มสร้างการเชื่อมต่อฐานข้อมูลใหม่</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>ไปที่หน้า Dashboard ของ Superset → เมนู <strong>Data > Databases</strong></li>
+        <li>คลิกปุ่มสีเขียว <strong>[ + DATABASE ]</strong> ที่มุมขวาบน</li>
+      </ul>
+    </section>
+
+    <!-- กรอกข้อมูลการเชื่อมต่อ -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">✅ 3. กรอกข้อมูลการเชื่อมต่อ</h2>
+      <p class="mb-2">ในหน้า <strong>Connect a database</strong> ให้กรอกข้อมูลดังนี้:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong>DATABASE NAME:</strong> ตั้งชื่อที่สื่อความหมาย เช่น <code>ClickHouse_Local_WSL</code></li>
+        <li><strong>SQLALCHEMY URI:</strong> กรอกค่าตามรูปแบบด้านล่าง</li>
+      </ul>
+
+      <h3 class="text-lg font-semibold text-blue-500 mt-3 mb-2">📌 SQLAlchemy URI สำหรับ ClickHouse</h3>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded"><code>clickhouse+http://default:@localhost:8123/default</code></pre>
+
+      <p class="mt-3">คำอธิบาย:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><code>clickhouse+http</code>: เชื่อมต่อผ่านโปรโตคอล HTTP</li>
+        <li><code>default:@</code>: username:password (ค่าเริ่มต้นคือ user <code>default</code> ไม่มีรหัสผ่าน)</li>
+        <li><code>localhost:8123</code>: ที่อยู่และพอร์ตของ ClickHouse server</li>
+        <li><code>/default</code>: ชื่อฐานข้อมูล (สามารถเปลี่ยนตามที่สร้างไว้)</li>
+      </ul>
+
+      <p class="mt-2">คลิก <strong>[ TEST CONNECTION ]</strong> → หากขึ้นว่า <strong>"Seems OK!"</strong> ให้กด <strong>[ CONNECT ]</strong></p>
+    </section>
+
+    <!-- เพิ่ม Dataset -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">✅ 4. เพิ่ม Dataset จากตาราง</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>ไปที่ <strong>Data > Datasets</strong> แล้วคลิกปุ่ม <strong>[ + DATASET ]</strong></li>
+        <li><strong>DATABASE:</strong> เลือก Database ที่สร้างไว้ เช่น <code>ClickHouse_Local_WSL</code></li>
+        <li><strong>SCHEMA:</strong> เลือก Schema (ค่าเริ่มต้นคือ <code>default</code>)</li>
+        <li>กด <strong>[ ADD ]</strong> เพื่อสร้าง Dataset</li>
+      </ul>
+    </section>
+
+    <!-- สรุป -->
+    <section class="bg-white rounded-lg p-6 shadow">
+      <h2 class="text-xl font-semibold text-blue-600 mb-3">🎉 สำเร็จ!</h2>
+      <p>ตอนนี้คุณสามารถเริ่มใช้งาน Dataset ใหม่ใน Chart และ Dashboard ของ Superset ได้ทันที</p>
+    </section>
+
+    <!-- ปุ่มกลับ -->
+    <div class="text-center mt-6">
+      <a href="index.html" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">⬅ กลับหน้าแรก</a>
+    </div>
+
+  </main>
+
+  <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+    <p>HW05 - ClickHouse + Superset</p>
+  </footer>
+
+</body>
+</html>
+

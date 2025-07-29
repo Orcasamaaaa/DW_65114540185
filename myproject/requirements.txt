@@ -3,4 +3,3 @@ django
 channels
 clickhouse-connect
 django-clickhouse
-django-clickhouse-backend
